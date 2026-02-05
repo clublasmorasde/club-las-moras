@@ -2,6 +2,40 @@ import React, { useState } from 'react';
 import { initialProducts } from '../data/initialData';
 import { ProductCategory, Product } from '../types';
 
+// --- NUEVOS PRODUCTOS DE PROVEEDURÍA (Integrados para no tocar initialData) ---
+const PROVEEDURIA_EXTRAS: Product[] = [
+    {
+        id: 'prov-1',
+        name: 'Gaseosa Línea Coca-Cola 1.5L',
+        price: 1200,
+        category: 'drinks',
+        description: 'Bebida refrescante ideal para compartir después del partido. Servida a temperatura perfecta.',
+        imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=800',
+        stock: 24,
+        featured: true
+    },
+    {
+        id: 'prov-2',
+        name: 'Bolsa de Carbón Vegetal 4kg',
+        price: 2500,
+        category: 'utilidades',
+        description: 'Carbón de quebracho blanco de alto rendimiento para un asado impecable en nuestros quinchos.',
+        imageUrl: 'https://images.unsplash.com/photo-1591261730799-ee4e6c2d16d7?q=80&w=800',
+        stock: 10,
+        featured: false
+    },
+    {
+        id: 'prov-3',
+        name: 'Hielo en Escamas (Bolsa)',
+        price: 900,
+        category: 'utilidades',
+        description: 'Bolsa de hielo premium para mantener tus bebidas frías durante toda la jornada.',
+        imageUrl: 'https://images.unsplash.com/photo-1551731146-2475338ec2d5?q=80&w=800',
+        stock: 15,
+        featured: false
+    }
+];
+
 const Shop: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -15,9 +49,13 @@ const Shop: React.FC = () => {
         { id: 'merch', label: 'Merchandising' }
     ];
 
+    // Combinamos los productos originales con los nuevos de la proveeduría
+    const allAvailableProducts = [...initialProducts, ...PROVEEDURIA_EXTRAS];
+
+    // Aplicamos el filtro sobre la lista combinada
     const filteredProducts = activeCategory === 'all'
-        ? initialProducts
-        : initialProducts.filter(p => p.category === activeCategory);
+        ? allAvailableProducts
+        : allAvailableProducts.filter(p => p.category === (activeCategory as ProductCategory));
 
     const handleOrder = (product: Product) => {
         const message = `Hola! Me gustaría pedir: ${product.name} (Precio: $${product.price.toLocaleString()}). ¿Tienen disponibilidad?`;
@@ -183,14 +221,6 @@ const Shop: React.FC = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Close button */}
-                    <button
-                        onClick={() => setSelectedProduct(null)}
-                        className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center text-2xl transition-all backdrop-blur-sm"
-                    >
-                        ✕
-                    </button>
                 </div>
             )}
         </div>
