@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Instagram, Phone, MessageCircle, MapPin } from 'lucide-react';
+import { ShoppingCart, Instagram, Phone, MessageCircle, MapPin, Menu, X } from 'lucide-react';
 
-// --- COMPONENTES INTEGRADOS PARA EVITAR ERRORES ---
+// --- COMPONENTES INTEGRADOS ---
 const Home = () => (
   <div className="p-10 text-center bg-white min-h-[60vh] flex flex-col items-center justify-center">
     <h1 className="text-4xl font-bold mb-4 text-slate-800">Club Las Moras 🌿</h1>
@@ -16,24 +16,23 @@ const Home = () => (
 const Shop = () => <div className="p-20 text-center text-2xl font-bold text-slate-400">Tienda próximamente... 🛍️</div>;
 const MyReservations = () => <div className="p-20 text-center text-2xl font-bold text-slate-400">Aquí aparecerán tus reservas confirmadas 📅</div>;
 
-// --- SECCIÓN: SELECCIÓN DE DEPORTES ---
 const DeportesSeleccion = () => (
   <div className="p-6 bg-slate-50 min-h-screen">
     <h2 className="text-2xl font-bold mb-6 text-slate-800 text-center">¿Qué jugamos hoy? 🏆</h2>
     <div className="grid gap-6 max-w-lg mx-auto">
-      <div className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors cursor-pointer">
+      <Link to="/deportes-seleccion" className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors">
         <span className="text-5xl">🎾</span>
         <div><h3 className="font-bold text-xl">Pádel Techado</h3><p className="text-sm text-slate-500">Pistas de cristal premium</p></div>
-      </div>
-      <div className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors cursor-pointer">
+      </Link>
+      <Link to="/deportes-seleccion" className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors">
         <span className="text-5xl">⚽</span>
         <div><h3 className="font-bold text-xl">Fútbol 6</h3><p className="text-sm text-slate-500">Césped sintético nuevo</p></div>
-      </div>
+      </Link>
     </div>
   </div>
 );
 
-// --- COMPONENTE PRINCIPAL ---
+// --- APP PRINCIPAL ---
 export default function App() {
   const [canchas, setCanchas] = useState([
     { id: 1, nombre: "Pádel 1", deporte: "Pádel", abierta: true },
@@ -45,17 +44,28 @@ export default function App() {
     setCanchas(prev => prev.map(c => c.id === id ? { ...c, abierta: !c.abierta } : c));
   };
 
+  const AdminAccess = () => {
+    const navigate = useNavigate();
+    const handleLogin = () => {
+      const user = prompt("Usuario:");
+      const pass = prompt("Contraseña:");
+      if (user === "JORS" && pass === "FIRULAIS") navigate('/admin-control');
+      else alert("Acceso denegado");
+    };
+    return <button onClick={handleLogin} className="text-xs bg-slate-800 text-white px-3 py-1 rounded">Admin</button>;
+  };
+
   return (
     <Router>
       <div className="min-h-screen bg-white flex flex-col font-sans">
         <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 px-6 h-20 flex justify-between items-center shadow-sm">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">LM</div>
+            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl">LM</div>
             <span className="font-black text-xl tracking-tight text-slate-800 uppercase">Las Moras</span>
           </Link>
-          <div className="flex gap-6 items-center">
-            <Link to="/mis-reservas" className="text-slate-500 hover:text-slate-900 font-medium">Reservas</Link>
-            <Link to="/shop" className="bg-slate-100 p-2 rounded-full text-slate-600"><ShoppingCart size={20}/></Link>
+          <div className="flex gap-4 items-center">
+            <Link to="/mis-reservas" className="text-slate-500 hover:text-slate-900 text-sm font-medium">Reservas</Link>
+            <AdminAccess />
           </div>
         </nav>
 
@@ -66,8 +76,8 @@ export default function App() {
             <Route path="/mis-reservas" element={<MyReservations />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/admin-control" element={
-              <div className="p-8 max-w-2xl mx-auto">
-                <h1 className="text-3xl font-bold mb-8 text-slate-900">Panel de Control 🔒</h1>
+              <div className="p-8 max-w-2xl mx-auto text-slate-900">
+                <h1 className="text-3xl font-bold mb-8">Panel de Control 🔒</h1>
                 <div className="grid gap-4">
                   {canchas.map(c => (
                     <div key={c.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
