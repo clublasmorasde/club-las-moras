@@ -62,7 +62,7 @@ const AdminAccessButton = () => {
 };
 
 // --- SECCIÓN 3: PANEL DE CONTROL ---
-const AdminControlPanel = ({ canchas, toggleCancha }: any) => {
+const AdminControlPanel = ({ canchas, toggleCancha }) => {
   return (
     <div className="p-4 max-w-md mx-auto bg-slate-900 min-h-screen text-white pb-32">
       <h1 className="text-2xl font-bold mb-6 text-yellow-500 text-center uppercase tracking-widest pt-4">Panel de Control 🔒</h1>
