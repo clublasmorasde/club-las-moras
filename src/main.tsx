@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App' // Esto buscará automáticamente tu App.jsx en la misma carpeta
-import './index.css'   // Esto cargará Tailwind
+import App from './App'
+import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
 )
-
