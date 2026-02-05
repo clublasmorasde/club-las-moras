@@ -1,98 +1,103 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Instagram, Phone, MessageCircle, MapPin, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingCart, Send, Plus, Minus, User } from 'lucide-react';
 
-// --- COMPONENTES INTEGRADOS ---
-const Home = () => (
-  <div className="p-10 text-center bg-white min-h-[60vh] flex flex-col items-center justify-center">
-    <h1 className="text-4xl font-bold mb-4 text-slate-800">Club Las Moras 🌿</h1>
-    <p className="text-slate-600 mb-8 max-w-md">Disfruta de las mejores instalaciones para Pádel y Fútbol en un ambiente premium.</p>
-    <Link to="/deportes-seleccion" className="bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-xl hover:bg-green-700 transition-all transform hover:scale-105">
-      Reservar mi Cancha ahora
-    </Link>
-  </div>
-);
+const PRODUCTOS = [
+  { id: 1, nombre: 'Gaseosa 1.5L', precio: 1500, emoji: '🥤' },
+  { id: 2, nombre: 'Carbón 4kg', precio: 2200, emoji: '🔥' },
+  { id: 3, nombre: 'Cerveza Lata', precio: 1200, emoji: '🍺' },
+  { id: 4, nombre: 'Hielo Bolsa', precio: 800, emoji: '🧊' }
+];
 
-const Shop = () => <div className="p-20 text-center text-2xl font-bold text-slate-400">Tienda próximamente... 🛍️</div>;
-const MyReservations = () => <div className="p-20 text-center text-2xl font-bold text-slate-400">Aquí aparecerán tus reservas confirmadas 📅</div>;
-
-const DeportesSeleccion = () => (
-  <div className="p-6 bg-slate-50 min-h-screen">
-    <h2 className="text-2xl font-bold mb-6 text-slate-800 text-center">¿Qué jugamos hoy? 🏆</h2>
-    <div className="grid gap-6 max-w-lg mx-auto">
-      <Link to="/deportes-seleccion" className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors">
-        <span className="text-5xl">🎾</span>
-        <div><h3 className="font-bold text-xl">Pádel Techado</h3><p className="text-sm text-slate-500">Pistas de cristal premium</p></div>
-      </Link>
-      <Link to="/deportes-seleccion" className="bg-white p-6 rounded-3xl shadow-md border border-slate-100 flex items-center gap-5 hover:border-green-500 transition-colors">
-        <span className="text-5xl">⚽</span>
-        <div><h3 className="font-bold text-xl">Fútbol 6</h3><p className="text-sm text-slate-500">Césped sintético nuevo</p></div>
-      </Link>
-    </div>
-  </div>
-);
-
-// --- APP PRINCIPAL ---
 export default function App() {
-  const [canchas, setCanchas] = useState([
-    { id: 1, nombre: "Pádel 1", deporte: "Pádel", abierta: true },
-    { id: 2, nombre: "Pádel 2", deporte: "Pádel", abierta: true },
-    { id: 3, nombre: "Fútbol 6", deporte: "Fútbol", abierta: true },
-  ]);
+  const [carrito, setCarrito] = useState([]);
+  const [nombre, setNombre] = useState(localStorage.getItem('nombreSocio') || "");
+  const [notas, setNotas] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  const toggleCancha = (id: number) => {
-    setCanchas(prev => prev.map(c => c.id === id ? { ...c, abierta: !c.abierta } : c));
+  useEffect(() => {
+    localStorage.setItem('nombreSocio', nombre);
+  }, [nombre]);
+
+  const agregar = (p) => {
+    const existe = carrito.find(item => item.id === p.id);
+    if (existe) {
+      setCarrito(carrito.map(item => item.id === p.id ? {...item, cant: item.cant + 1} : item));
+    } else {
+      setCarrito([...carrito, { ...p, cant: 1 }]);
+    }
   };
 
-  const AdminAccess = () => {
-    const navigate = useNavigate();
-    const handleLogin = () => {
-      const user = prompt("Usuario:");
-      const pass = prompt("Contraseña:");
-      if (user === "JORS" && pass === "FIRULAIS") navigate('/admin-control');
-      else alert("Acceso denegado");
-    };
-    return <button onClick={handleLogin} className="text-xs bg-slate-800 text-white px-3 py-1 rounded">Admin</button>;
+  const quitar = (id) => {
+    const item = carrito.find(i => i.id === id);
+    if (item?.cant > 1) {
+      setCarrito(carrito.map(i => i.id === id ? {...i, cant: i.cant - 1} : i));
+    } else {
+      setCarrito(carrito.filter(i => i.id !== id));
+    }
+  };
+
+  const total = carrito.reduce((acc, p) => acc + (p.precio * p.cant), 0);
+
+  const enviarPedido = async () => {
+    if (!nombre) return alert("Por favor, ingresa tu nombre");
+    setCargando(true);
+    await new Promise(res => setTimeout(res, 800));
+    
+    const texto = `🌿 *Club Las Moras* 🌿\n👤 Socio: ${nombre}\n---\n🛒 Pedido:\n${carrito.map(i => `${i.cant}x ${i.nombre}`).join('\n')}\n---\n💬 Notas: ${notas || "Sin notas"}\n💰 TOTAL: $${total}`;
+    window.open(`https://wa.me/5491123456789?text=${encodeURIComponent(texto)}`);
+    setCargando(false);
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-white flex flex-col font-sans">
-        <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 px-6 h-20 flex justify-between items-center shadow-sm">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl">LM</div>
-            <span className="font-black text-xl tracking-tight text-slate-800 uppercase">Las Moras</span>
-          </Link>
-          <div className="flex gap-4 items-center">
-            <Link to="/mis-reservas" className="text-slate-500 hover:text-slate-900 text-sm font-medium">Reservas</Link>
-            <AdminAccess />
-          </div>
-        </nav>
+    <div className="min-h-screen bg-slate-50 p-4 font-sans text-slate-900">
+      <header className="py-6 text-center">
+        <h1 className="text-3xl font-extrabold text-green-700">Club Las Moras 🌿</h1>
+        <p className="text-slate-500">Proveeduría Digital</p>
+      </header>
 
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/deportes-seleccion" element={<DeportesSeleccion />} />
-            <Route path="/mis-reservas" element={<MyReservations />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/admin-control" element={
-              <div className="p-8 max-w-2xl mx-auto text-slate-900">
-                <h1 className="text-3xl font-bold mb-8">Panel de Control 🔒</h1>
-                <div className="grid gap-4">
-                  {canchas.map(c => (
-                    <div key={c.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
-                      <span className="font-bold text-lg">{c.nombre}</span>
-                      <button onClick={() => toggleCancha(c.id)} className={`px-6 py-2 rounded-full font-bold text-white transition-all ${c.abierta ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}>
-                        {c.abierta ? 'ABIERTA' : 'CERRADA'}
-                      </button>
-                    </div>
-                  ))}
+      <main className="max-w-md mx-auto space-y-6">
+        <section className="grid grid-cols-2 gap-4">
+          {PRODUCTOS.map(p => (
+            <div key={p.id} className="bg-white p-4 rounded-3xl shadow-sm border-none flex flex-col items-center">
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-3xl mb-2">{p.emoji}</div>
+              <span className="font-bold text-sm text-center">{p.nombre}</span>
+              <span className="text-green-600 font-bold mb-3">${p.precio}</span>
+              <button onClick={() => agregar(p)} className="bg-slate-900 text-white p-2 rounded-full shadow-md active:scale-90 transition-transform">
+                <Plus size={20} />
+              </button>
+            </div>
+          ))}
+        </section>
+
+        {carrito.length > 0 && (
+          <section className="bg-white rounded-3xl shadow-xl p-6 border border-slate-100 space-y-4">
+            <h2 className="font-bold text-xl flex items-center gap-2">
+              <ShoppingCart size={20} /> Tu Pedido
+            </h2>
+            {carrito.map(i => (
+              <div key={i.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-2xl">
+                <span>{i.nombre} (x{i.cant})</span>
+                <div className="flex gap-2">
+                  <button onClick={() => quitar(i.id)} className="bg-white p-1 rounded-lg border shadow-sm"><Minus size={16}/></button>
+                  <button onClick={() => agregar(i)} className="bg-white p-1 rounded-lg border shadow-sm"><Plus size={16}/></button>
                 </div>
               </div>
-            } />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+            ))}
+            <div className="space-y-3 pt-2">
+              <input value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Nombre del Socio" className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 outline-none" />
+              <textarea value={notas} onChange={e => setNotas(e.target.value)} placeholder="Notas (Ej: Gaseosas frías)" className="w-full p-3 rounded-xl border border-slate-200 h-20 outline-none" />
+            </div>
+            <button 
+              onClick={enviarPedido}
+              disabled={cargando}
+              className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold shadow-[0_10px_20px_rgba(22,163,74,0.3)] active:translate-y-1 transition-all flex justify-center items-center gap-2"
+            >
+              {cargando ? "PROCESANDO..." : <>ENVIAR A WHATSAPP <Send size={18}/></>}
+            </button>
+            <div className="text-center font-bold text-lg">Total: ${total}</div>
+          </section>
+        )}
+      </main>
+    </div>
   );
 }
