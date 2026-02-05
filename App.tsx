@@ -1,14 +1,8 @@
-import { useState } from 'react'; // Solo importamos useState para evitar el error TS6133
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { ReservationProvider } from './context/ReservationContext';
-import Home from './pages/Home';
-import VenueDetails from './pages/VenueDetails';
-import MyReservations from './pages/MyReservations';
-import AdminDashboard from './pages/AdminDashboard';
-import Shop from './pages/Shop';
-import ChatWidget from './components/ChatWidget';
-import WhatsAppButtons from './components/WhatsAppButtons';
+import React, { useState } from 'react';
+import { ShoppingCart, Menu, X, Instagram, Phone } from 'lucide-react';
 
+// Aquí debe ir todo el código de los productos, el carrito y el diseño...
+// SIN importar cosas como './pages/Home' o './context/ReservationContext'
 // --- SECCIÓN 1: SELECCIÓN DE DEPORTES ---
 const DeportesSeleccion = () => {
   return (
