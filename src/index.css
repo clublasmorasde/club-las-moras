@@ -4,5 +4,6 @@
 
 body {
   margin: 0;
-  background-color: #f8fafc; /* Un gris muy clarito para que resalten las tarjetas */
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
 }
