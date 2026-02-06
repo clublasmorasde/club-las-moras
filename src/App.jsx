@@ -10,16 +10,14 @@ import ChatWidget from './components/ChatWidget';
 import WhatsAppButtons from './components/WhatsAppButtons';
 import { Calendar, Clock, ShoppingBag } from 'lucide-react';
 
-// --- SECCIÓN: SELECCIÓN DE ÁREAS (Sustituye a DeportesSeleccion) ---
+// --- SECCIÓN: SELECCIÓN DE ÁREAS ---
 const SeccionInstalaciones = () => {
   return (
     <div className="p-6 bg-slate-50 min-h-screen pb-24">
       <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-8 text-slate-400 text-center pt-4">
         Gestión de Reservas
       </h2>
-      
       <div className="grid gap-6">
-        {/* SECTOR SOCIAL / INSTALACIONES */}
         <div className="space-y-4">
           <h3 className="text-[10px] font-black uppercase text-orange-600 ml-2 tracking-widest">Área Social</h3>
           <Link to="/" className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex items-center gap-5 active:scale-95 transition-all">
@@ -30,8 +28,6 @@ const SeccionInstalaciones = () => {
             </div>
           </Link>
         </div>
-
-        {/* SECTOR DEPORTIVO */}
         <div className="space-y-4">
           <h3 className="text-[10px] font-black uppercase text-primary-900 ml-2 tracking-widest">Área Deportiva</h3>
           <div className="grid gap-3">
@@ -57,7 +53,7 @@ const AdminAccessButton = () => {
     const user = prompt("Usuario:");
     const pass = prompt("Contraseña:");
     if (user === "JORS" && pass === "FIRULAIS") {
-      navigate('/admin-control');
+      navigate('/admin');
     } else {
       alert("Acceso denegado.");
     }
@@ -105,6 +101,7 @@ export default function App() {
               <Route path="/deportes-seleccion" element={<SeccionInstalaciones />} />
               <Route path="/venue/:id" element={<VenueDetails />} />
               <Route path="/mis-reservas" element={<MyReservations />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/shop" element={<Shop carrito={carrito} alAgregar={agregarAlCarrito} alQuitar={quitarDelCarrito} />} />
             </Routes>
           </main>
@@ -112,7 +109,7 @@ export default function App() {
           <WhatsAppButtons />
           <ChatWidget />
 
-          <footer className="fixed bottom-0 w-full bg-white border-t border-slate-100 p-4 flex justify-around items-center z-40 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+          <footer className="fixed bottom-0 w-full bg-white border-t border-slate-100 p-4 flex justify-around items-center z-40 shadow-[0_-5px_15_rgba(0,0,0,0.05)]">
              <Link to="/deportes-seleccion" className="text-slate-400 hover:text-primary-950 flex flex-col items-center">
                 <Calendar size={20} />
                 <span className="text-[10px] font-bold uppercase mt-1">Instalaciones</span>
