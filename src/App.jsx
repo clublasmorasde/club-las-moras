@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import Home from './pages/Home';
 import VenueDetails from './pages/VenueDetails';
 import MyReservations from './pages/MyReservations';
-import AdminDashboard from './pages/AdminDashboard';
+// SE ELIMINÓ AdminDashboard PORQUE EL ARCHIVO NO EXISTE EN LA CARPETA PAGES
 import Shop from './pages/Shop';
 import ChatWidget from './components/ChatWidget';
 import WhatsAppButtons from './components/WhatsAppButtons';
@@ -139,7 +139,6 @@ export default function App() {
   }
 
   return (
-    // SE ELIMINARON LAS ETIQUETAS RESERVATIONPROVIDER QUE DABAN ERROR
       <Router>
         <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
           <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-4 h-20 flex justify-between items-center">
@@ -156,7 +155,8 @@ export default function App() {
               <Route path="/deportes-seleccion" element={<DeportesSeleccion />} />
               <Route path="/venue/:id" element={<VenueDetails />} />
               <Route path="/mis-reservas" element={<MyReservations />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              {/* SE CORRIGIÓ ESTA RUTA PARA QUE USE EL PANEL DE CONTROL EXISTENTE */}
+              <Route path="/admin" element={<AdminControlPanel canchas={canchas} toggleCancha={toggleCancha} />} />
               <Route path="/admin-control" element={<AdminControlPanel canchas={canchas} toggleCancha={toggleCancha} />} />
               <Route path="/shop" element={<Shop carrito={carrito} alAgregar={agregarAlCarrito} alQuitar={quitarDelCarrito} />} />
             </Routes>
