@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import Home from './pages/Home';
 import VenueDetails from './pages/VenueDetails';
 import MyReservations from './pages/MyReservations';
-// SE ELIMINÓ AdminDashboard PORQUE EL ARCHIVO NO EXISTE EN LA CARPETA PAGES
 import Shop from './pages/Shop';
 import ChatWidget from './components/ChatWidget';
 import WhatsAppButtons from './components/WhatsAppButtons';
