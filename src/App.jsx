@@ -186,4 +186,4 @@ export default function App() {
         </div>
       </Router>
   );
-}
+}// Version final de despliegue - Forzado
