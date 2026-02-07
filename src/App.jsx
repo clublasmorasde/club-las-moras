@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { ReservationProvider } from './context/ReservationContext';
+// SE ELIMINÓ LA IMPORTACIÓN DE RESERVATIONCONTEXT QUE DABA ERROR
 import Home from './pages/Home';
 import VenueDetails from './pages/VenueDetails';
 import MyReservations from './pages/MyReservations';
@@ -139,7 +139,7 @@ export default function App() {
   }
 
   return (
-    <ReservationProvider>
+    // SE ELIMINARON LAS ETIQUETAS RESERVATIONPROVIDER QUE DABAN ERROR
       <Router>
         <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
           <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-4 h-20 flex justify-between items-center">
@@ -186,6 +186,5 @@ export default function App() {
           </footer>
         </div>
       </Router>
-    </ReservationProvider>
   );
 }
