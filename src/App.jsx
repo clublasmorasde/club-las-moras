@@ -1,47 +1,83 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-// SE ELIMINÓ LA IMPORTACIÓN DE RESERVATIONCONTEXT QUE DABA ERROR
+// SE MANTIENE LA LÓGICA DE EXCLUSIÓN DE RESERVATIONCONTEXT SEGÚN TU ÚLTIMO ARCHIVO
 import Home from './pages/Home';
 import VenueDetails from './pages/VenueDetails';
 import MyReservations from './pages/MyReservations';
 import Shop from './pages/Shop';
 import ChatWidget from './components/ChatWidget';
 import WhatsAppButtons from './components/WhatsAppButtons';
-import { Calendar, Clock, ShoppingBag } from 'lucide-react';
+import { Calendar, Clock, ShoppingBag, Info, ChevronDown } from 'lucide-react';
 
-// --- SECCIÓN 1: SELECCIÓN DE DEPORTES ---
+// --- NUEVO SUB-COMPONENTE PARA DEPORTES (Optimiza visualización) ---
+const DeporteCard = ({ to, emoji, titulo, subtitulo, infoExtra }) => {
+  const [showInfo, setShowInfo] = useState(false);
+
+  return (
+    <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden transition-all hover:border-accent-600/50">
+      <Link to={to} className="p-5 flex items-center gap-4 active:scale-95 transition-all">
+        <div className="text-4xl bg-slate-50 w-16 h-16 flex items-center justify-center rounded-2xl shadow-inner">
+          {emoji}
+        </div>
+        <div className="flex-1">
+          <h3 className="font-black text-lg text-slate-800 uppercase italic leading-none">{titulo}</h3>
+          <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">{subtitulo}</p>
+        </div>
+      </Link>
+      
+      {/* Botón de expansión para más información */}
+      <button 
+        onClick={() => setShowInfo(!showInfo)}
+        className="w-full py-2 bg-slate-50/50 flex items-center justify-center gap-1 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-primary-950 transition-colors border-t border-slate-50"
+      >
+        {showInfo ? "Cerrar detalles" : "Ver especificaciones"}
+        <ChevronDown size={12} className={`transition-transform ${showInfo ? 'rotate-180' : ''}`} />
+      </button>
+
+      {showInfo && (
+        <div className="p-4 bg-primary-900/5 animate-in fade-in slide-in-from-top-2">
+          <p className="text-[11px] text-slate-600 leading-relaxed font-medium italic">
+            {infoExtra}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- SECCIÓN 1: SELECCIÓN DE DEPORTES (Actualizada) ---
 const DeportesSeleccion = () => {
   return (
     <div className="p-6 bg-slate-50 min-h-screen pb-32">
       <h2 className="text-2xl font-black mb-6 text-primary-950 italic uppercase tracking-tighter text-center">¿Qué jugamos hoy? 🏆</h2>
       <div className="grid gap-4">
-        <Link to="/?deporte=padel" className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-4 active:scale-95 transition-all">
-          <div className="text-4xl bg-slate-50 w-16 h-16 flex items-center justify-center rounded-2xl">🎾</div>
-          <div>
-            <h3 className="font-black text-lg text-slate-800 uppercase italic leading-none">Pádel Techado</h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Canchas de Vidrio</p>
-          </div>
-        </Link>
-        <Link to="/?deporte=futbol6" className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-4 active:scale-95 transition-all">
-          <div className="text-4xl bg-slate-50 w-16 h-16 flex items-center justify-center rounded-2xl">⚽</div>
-          <div>
-            <h3 className="font-black text-lg text-slate-800 uppercase italic leading-none">Fútbol 6</h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Sintético Premium</p>
-          </div>
-        </Link>
-        <Link to="/?deporte=futbol8" className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-4 active:scale-95 transition-all">
-          <div className="text-4xl bg-slate-50 w-16 h-16 flex items-center justify-center rounded-2xl">🏟️</div>
-          <div>
-            <h3 className="font-black text-lg text-slate-800 uppercase italic leading-none">Fútbol 8</h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Césped Natural</p>
-          </div>
-        </Link>
+        <DeporteCard 
+          to="/?deporte=padel"
+          emoji="🎾"
+          titulo="Pádel Techado"
+          subtitulo="Canchas de Vidrio"
+          infoExtra="Canchas profesionales de vidrio templado, iluminación LED de alta potencia. Turnos de 90 minutos."
+        />
+        <DeporteCard 
+          to="/?deporte=futbol6"
+          emoji="⚽"
+          titulo="Fútbol 6"
+          subtitulo="Sintético Premium"
+          infoExtra="Césped sintético de última generación. Incluye pecheras y pelota para el encuentro."
+        />
+        <DeporteCard 
+          to="/?deporte=futbol8"
+          emoji="🏟️"
+          titulo="Fútbol 8"
+          subtitulo="Césped Natural"
+          infoExtra="Campo de césped natural con medidas oficiales. Ideal para encuentros competitivos."
+        />
       </div>
     </div>
   );
 };
 
-// --- SECCIÓN 2: ACCESO ADMIN ---
+// --- SECCIÓN 2: ACCESO ADMIN (Se mantiene tu lógica intacta) ---
 const AdminAccessButton = () => {
   const navigate = useNavigate();
   const handleAdminAccess = () => {
@@ -54,13 +90,16 @@ const AdminAccessButton = () => {
     }
   };
   return (
-    <button onClick={handleAdminAccess} className="px-4 py-2 bg-primary-950 text-accent-500 text-[10px] font-black uppercase tracking-widest rounded-sm border border-accent-600/30">
+    <button 
+      onClick={handleAdminAccess} 
+      className="px-4 py-2 bg-primary-950 text-accent-500 text-[10px] font-black uppercase tracking-widest rounded-sm border border-accent-600/30 hover:bg-black transition-all"
+    >
       Admin
     </button>
   );
 };
 
-// --- SECCIÓN 3: PANEL DE CONTROL ---
+// --- SECCIÓN 3: PANEL DE CONTROL (Se mantiene tu lógica intacta) ---
 const AdminControlPanel = ({ canchas, toggleCancha }) => {
   return (
     <div className="p-4 max-w-md mx-auto bg-slate-900 min-h-screen text-white pb-32">
@@ -121,7 +160,6 @@ export default function App() {
     setCarrito(prev => prev.map(item => item.id === id ? { ...item, cantidad: Math.max(0, item.cantidad - 1) } : item).filter(item => item.cantidad > 0));
   };
 
-  // --- RENDERIZADO CONDICIONAL: LOGIN O APP ---
   if (!nombreSocio) {
     return (
       <div className="min-h-screen bg-primary-950 flex flex-col items-center justify-center p-8 text-center">
@@ -131,7 +169,7 @@ export default function App() {
         <form onSubmit={handleIngresar} className="w-full max-w-xs space-y-4">
           <input type="text" placeholder="Tu Nombre y Apellido" value={inputNombre} onChange={(e) => setInputNombre(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-bold placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-accent-500 text-center" />
-          <button type="submit" className="w-full bg-accent-500 text-primary-950 font-black uppercase tracking-widest py-5 rounded-2xl active:scale-95 transition-all">Entrar</button>
+          <button type="submit" className="w-full bg-accent-500 text-primary-950 font-black uppercase tracking-widest py-5 rounded-2xl active:scale-95 transition-all shadow-lg">Entrar</button>
         </form>
       </div>
     );
@@ -154,7 +192,6 @@ export default function App() {
               <Route path="/deportes-seleccion" element={<DeportesSeleccion />} />
               <Route path="/venue/:id" element={<VenueDetails />} />
               <Route path="/mis-reservas" element={<MyReservations />} />
-              {/* SE CORRIGIÓ ESTA RUTA PARA QUE USE EL PANEL DE CONTROL EXISTENTE */}
               <Route path="/admin" element={<AdminControlPanel canchas={canchas} toggleCancha={toggleCancha} />} />
               <Route path="/admin-control" element={<AdminControlPanel canchas={canchas} toggleCancha={toggleCancha} />} />
               <Route path="/shop" element={<Shop carrito={carrito} alAgregar={agregarAlCarrito} alQuitar={quitarDelCarrito} />} />
@@ -186,4 +223,4 @@ export default function App() {
         </div>
       </Router>
   );
-}// Version final de despliegue - Forzado
+}

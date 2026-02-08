@@ -50,23 +50,12 @@ const Shop = ({ carrito, alAgregar, alQuitar }) => {
                 ))}
             </div>
 
-            {/* Grid de Productos */}
+            {/* Grid de Productos Optimizado */}
             <div className="grid grid-cols-2 gap-4 p-4 mt-4">
                 {filtrados.map(prod => {
                     const enCarrito = carrito.find(item => item.id === prod.id);
-                    return (
-                        <div key={prod.id} className="bg-white p-4 rounded-[2rem] shadow-sm flex flex-col items-center border border-slate-100">
-                            <div className="text-4xl mb-2 bg-slate-50 w-16 h-16 flex items-center justify-center rounded-full">{prod.emoji}</div>
-                            <h3 className="text-[10px] font-bold text-center uppercase mb-1">{prod.name}</h3>
-                            <span className="text-green-600 font-black text-sm mb-3">${prod.price}</span>
-                            
-                            <div className="flex items-center gap-3">
-                                <button onClick={() => alQuitar(prod.id)} className="w-8 h-8 bg-slate-100 rounded-full font-bold">-</button>
-                                <span className="font-bold text-sm">{enCarrito ? enCarrito.cantidad : 0}</span>
-                                <button onClick={() => alAgregar(prod)} className="w-8 h-8 bg-primary-950 text-white rounded-full font-bold">+</button>
-                            </div>
-                        </div>
-                    );
+                    // Usamos un componente interno para que cada tarjeta tenga su propio estado "verMas"
+                    return <ProductCard key={prod.id} prod={prod} enCarrito={enCarrito} alAgregar={alAgregar} alQuitar={alQuitar} />;
                 })}
             </div>
 
@@ -79,6 +68,46 @@ const Shop = ({ carrito, alAgregar, alQuitar }) => {
                     >
                         Pedir por WhatsApp (${carrito.reduce((acc, item) => acc + (item.price * item.cantidad), 0)})
                     </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Sub-componente para manejar el estado individual de "Ver Más"
+const ProductCard = ({ prod, enCarrito, alAgregar, alQuitar }) => {
+    const [verMas, setVerMas] = useState(false);
+
+    return (
+        <div className="bg-white p-5 rounded-[2.5rem] shadow-sm flex flex-col items-center border border-slate-100 transition-all hover:shadow-md">
+            <div className="text-4xl mb-2 bg-slate-50 w-20 h-20 flex items-center justify-center rounded-full shadow-inner">
+                {prod.emoji}
+            </div>
+            
+            <h3 className="text-[11px] font-black text-center uppercase mb-1 text-slate-800 leading-tight">
+                {prod.name}
+            </h3>
+            
+            <span className="text-emerald-600 font-black text-base mb-3">${prod.price}</span>
+            
+            <div className="flex items-center gap-4 bg-slate-50 p-1 rounded-full border border-slate-200 mb-4">
+                <button onClick={() => alQuitar(prod.id)} className="w-10 h-10 bg-white shadow-sm rounded-full font-black text-primary-950 hover:bg-red-50 active:scale-90 transition-all">-</button>
+                <span className="font-black text-sm w-4 text-center">{enCarrito ? enCarrito.cantidad : 0}</span>
+                <button onClick={() => alAgregar(prod)} className="w-10 h-10 bg-primary-950 text-accent-500 shadow-lg rounded-full font-black hover:bg-black active:scale-90 transition-all">+</button>
+            </div>
+
+            <button 
+                onClick={() => setVerMas(!verMas)}
+                className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-primary-950 transition-colors"
+            >
+                {verMas ? "↑ Menos info" : "↓ Más info"}
+            </button>
+
+            {verMas && (
+                <div className="mt-3 text-center animate-in fade-in slide-in-from-top-1">
+                    <p className="text-[10px] text-slate-500 italic leading-relaxed">
+                        Producto oficial de proveeduría. Entrega inmediata en el club.
+                    </p>
                 </div>
             )}
         </div>
